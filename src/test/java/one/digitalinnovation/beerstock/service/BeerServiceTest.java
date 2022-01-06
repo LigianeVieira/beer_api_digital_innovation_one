@@ -105,6 +105,7 @@ public class BeerServiceTest {
     }
 
     @Test
+    //retorno da lista de cervejas
     void whenListBeerIsCalledThenReturnAListOfBeers() {
         // given
         BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -121,6 +122,7 @@ public class BeerServiceTest {
     }
 
     @Test
+// qndo a lista não retorna nenhum resultado é vazia
     void whenListBeerIsCalledThenReturnAnEmptyListOfBeers() {
         //when
         when(beerRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
@@ -132,6 +134,7 @@ public class BeerServiceTest {
     }
 
     @Test
+    // se a cerveja com o id passado é deletada
     void whenExclusionIsCalledWithValidIdThenABeerShouldBeDeleted() throws BeerNotFoundException{
         // given
         BeerDTO expectedDeletedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();

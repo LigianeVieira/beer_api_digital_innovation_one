@@ -120,6 +120,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    //lista de cerveja chamada e estatus okay
     void whenGETListWithBeersIsCalledThenOkStatusIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -137,6 +138,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    // lista de cerveja retorna o status
     void whenGETListWithoutBeersIsCalledThenOkStatusIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -151,6 +153,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    //Deletar a lista cerveja
     void whenDELETEIsCalledWithValidIdThenNoContentStatusIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -165,6 +168,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    // delete qndo der error lança exceção
     void whenDELETEIsCalledWithInvalidIdThenNotFoundStatusIsReturned() throws Exception {
         //when
         doThrow(BeerNotFoundException.class).when(beerService).deleteById(INVALID_BEER_ID);
