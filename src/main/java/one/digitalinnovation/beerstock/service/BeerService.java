@@ -32,6 +32,7 @@ public class BeerService {
     public BeerDTO findByName(String name) throws BeerNotFoundException {
         Beer foundBeer = beerRepository.findByName(name)
                 .orElseThrow(() -> new BeerNotFoundException(name));
+
         return beerMapper.toDTO(foundBeer);
     }
 
@@ -57,6 +58,7 @@ public class BeerService {
     private Beer verifyIfExists(Long id) throws BeerNotFoundException {
         return beerRepository.findById(id)
                 .orElseThrow(() -> new BeerNotFoundException(id));
+
     }
 
     public BeerDTO increment(Long id, int quantityToIncrement) throws BeerNotFoundException, BeerStockExceededException {

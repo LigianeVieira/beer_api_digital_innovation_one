@@ -8,34 +8,20 @@ import one.digitalinnovation.beerstock.exception.BeerNotFoundException;
 import one.digitalinnovation.beerstock.exception.BeerStockExceededException;
 import one.digitalinnovation.beerstock.mapper.BeerMapper;
 import one.digitalinnovation.beerstock.repository.BeerRepository;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BeerServiceTest {
@@ -51,24 +37,32 @@ public class BeerServiceTest {
     private BeerService beerService;
 
     @Test
+
+    //qndo uma cerveja é informada então deve ser criada
     void whenBeerInformedThenItShouldBeCreated() throws BeerAlreadyRegisteredException {
-        // given
+        // given entradas a beerdto e o mapper converte dto em beer
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
         Beer expectedSavedBeer = beerMapper.toModel(expectedBeerDTO);
 
-        // when
+        // when simular os metodos (salva e retorna)
         when(beerRepository.findByName(expectedBeerDTO.getName())).thenReturn(Optional.empty());
         when(beerRepository.save(expectedSavedBeer)).thenReturn(expectedSavedBeer);
 
-        //then
+        //then chamar de fato o beer dto que retorna o dto, validar
         BeerDTO createdBeerDTO = beerService.createBeer(expectedBeerDTO);
 
+        // hamcrest =biblioteca que verifica os resultados dos testes muito mais concisamente!
         assertThat(createdBeerDTO.getId(), is(equalTo(expectedBeerDTO.getId())));
         assertThat(createdBeerDTO.getName(), is(equalTo(expectedBeerDTO.getName())));
         assertThat(createdBeerDTO.getQuantity(), is(equalTo(expectedBeerDTO.getQuantity())));
+
+        //posso verificar se a qntidade é igual ou maior que um valor
+        assertThat(createdBeerDTO.getQuantity(),is(greaterThan(2)));
     }
 
+
     @Test
+    //qndo uma cerveja ja criada é lancada entao ela lanca uma excecao
     void whenAlreadyRegisteredBeerInformedThenAnExceptionShouldBeThrown() {
         // given
         BeerDTO expectedBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -82,6 +76,7 @@ public class BeerServiceTest {
     }
 
     @Test
+      //validar nome cerveja
     void whenValidBeerNameIsGivenThenReturnABeer() throws BeerNotFoundException {
         // given
         BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -97,6 +92,7 @@ public class BeerServiceTest {
     }
 
     @Test
+    //qndo uma cerveja é invalida será lancado uma exceção
     void whenNotRegisteredBeerNameIsGivenThenThrowAnException() {
         // given
         BeerDTO expectedFoundBeerDTO = BeerDTOBuilder.builder().build().toBeerDTO();

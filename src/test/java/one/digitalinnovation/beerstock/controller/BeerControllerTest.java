@@ -4,7 +4,6 @@ import one.digitalinnovation.beerstock.builder.BeerDTOBuilder;
 import one.digitalinnovation.beerstock.dto.BeerDTO;
 import one.digitalinnovation.beerstock.dto.QuantityDTO;
 import one.digitalinnovation.beerstock.exception.BeerNotFoundException;
-import one.digitalinnovation.beerstock.exception.BeerStockExceededException;
 import one.digitalinnovation.beerstock.service.BeerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,10 +22,7 @@ import java.util.Collections;
 
 import static one.digitalinnovation.beerstock.utils.JsonConvertionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.patch;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,6 +45,7 @@ public class BeerControllerTest {
     private BeerController beerController;
 
     @BeforeEach
+    //antes de cada teste preciso fazer a chamada do metodo mock
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(beerController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
@@ -57,6 +54,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    // teste do post se a cerveja foi criada com sucesso
     void whenPOSTIsCalledThenABeerIsCreated() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -75,6 +73,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    // verificar se valida o campo obrigatorio do dto, se retorna o erro
     void whenPOSTIsCalledWithoutRequiredFieldThenAnErrorIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -88,6 +87,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    //validar o retorno Get e dados
     void whenGETIsCalledWithValidNameThenOkStatusIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
@@ -105,6 +105,7 @@ public class BeerControllerTest {
     }
 
     @Test
+    //não encontrado lança uma exceção
     void whenGETIsCalledWithoutRegisteredNameThenNotFoundStatusIsReturned() throws Exception {
         // given
         BeerDTO beerDTO = BeerDTOBuilder.builder().build().toBeerDTO();
